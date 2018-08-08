@@ -1,4 +1,5 @@
-prebuilt_dependencies = (
+# Generated from resolver: lts-11.16
+core_packages = (
 { "array": "0.5.2.0",
   "base": "4.10.1.0",
   "binary": "0.8.5.1",
@@ -373,6 +374,7 @@ packages = (
       version = "0.11.4.14",
       sha256 =
         "443d0271b24dbc6cb1736994f6e8c290ce502909738f4e03879b27d30bb47489",
+      flags = { "fast-bignum": False, },
     ),
   "HsOpenSSL-x509-system":
     struct(
@@ -481,6 +483,7 @@ packages = (
       version = "0.0.2.1",
       sha256 =
         "4bb1516b9fb340118960043e0c72aa62316be8ff3f78cc8c1354e2fac96dd8cc",
+      flags = { "bytestring-in-base": False, },
     ),
   "NoHoed":
     struct(
@@ -2389,6 +2392,7 @@ packages = (
       version = "0.34.1",
       sha256 =
         "dabbfada104fd88e068d75b73266c59682a2920e9e813bb12b76e1920bee0778",
+      flags = { "demos": True, },
     ),
   "brittany":
     struct(
@@ -2569,6 +2573,7 @@ packages = (
       version = "0.12.4",
       sha256 =
         "62a466f0805c2ca2fca3d8241571a90a766c31bacd2188ef4583f153aa5dfaf3",
+      flags = { "old-locale": False, },
     ),
   "cabal-toolkit":
     struct(
@@ -2653,6 +2658,7 @@ packages = (
       version = "0.5.1.0",
       sha256 =
         "762c8aaea2cdad61f52bad1b9f1f3b32764b4b6da03371aba6e5017f69614277",
+      flags = { "bytestring--lt-0_10_4": False, },
     ),
   "cassava-conduit":
     struct(
@@ -3523,6 +3529,7 @@ packages = (
       version = "1.3.8",
       sha256 =
         "9087c936bfcdb865bad3166baa3f12bf37acf076fa76010e3b5f82a1d485446e",
+      flags = { "new-base": True, },
     ),
   "curl-runnings":
     struct(
@@ -4993,6 +5000,7 @@ packages = (
       version = "1",
       sha256 =
         "ef11f94f44a74d6657ee61dcd2cfbc6d0889d233a2fb4caae6a29d9c59a1366f",
+      flags = { "containers": True, },
     ),
   "fuzzcheck":
     struct(
@@ -6343,6 +6351,7 @@ packages = (
       version = "0.9.0.6",
       sha256 =
         "bd1bd338a962d4d5c8a355ef75a24e9bae5b96734a2289ce637c066ed61c841c",
+      flags = { "test-hlint": False, },
     ),
   "hpp":
     struct(
@@ -6895,6 +6904,7 @@ packages = (
       version = "9.3.1.16",
       sha256 =
         "0d55e35cc718891d0987b7c8e6c43499efa727c68bc92e88e8b99461dff403e3",
+      flags = { "network-uri": True, },
     ),
   "hxt-charproperties":
     struct(
@@ -6925,6 +6935,7 @@ packages = (
       version = "9.1.5.2",
       sha256 =
         "6fa19d03991d53c34f4525a4fdfaafde56dd48459093b4502832a1fdd9dfdd0b",
+      flags = { "network-uri": True, },
     ),
   "hxt-pickle-utils":
     struct(
@@ -8299,6 +8310,7 @@ packages = (
       version = "0.2.2.0",
       sha256 =
         "ef1400ddc1ddafb0b98d4331a58bdbe3b5209a81579e17f85f180731a96d75d1",
+      flags = { "small_base": False, },
     ),
   "messagepack":
     struct(
@@ -9133,6 +9145,7 @@ packages = (
       version = "1.0.1",
       sha256 =
         "ab37163bc2970ea16c2eb6e091d1e99ab50b8e2ba93c23d24dac761803e509f8",
+      flags = { "allow-relative-paths": True, },
     ),
   "non-empty":
     struct(
@@ -9439,6 +9452,7 @@ packages = (
       version = "2.1.2",
       sha256 =
         "dc0b26eff61c6eed2e00927fa2c6b966ca758dea1596f3049cc70ae8b650eb65",
+      flags = { "old-locale": False, },
     ),
   "pandoc-citeproc":
     struct(
@@ -9565,6 +9579,7 @@ packages = (
       version = "0.8.1",
       sha256 =
         "d5e6dc557dcf53e97cc2f7f6d6ee30992920e3ea074042b6ac11f74f2792340f",
+      flags = { "old-time": False, },
     ),
   "pathwalk":
     struct(
@@ -12337,6 +12352,7 @@ packages = (
       version = "0.5.1.0",
       sha256 =
         "c89d697b6472b739db50e61201251fcaf8a8f5b595b1d9a488d395d7d5ce4b68",
+      flags = { "old-time": False, },
     ),
   "tar-conduit":
     struct(
@@ -12589,6 +12605,7 @@ packages = (
       version = "1.2.3.0",
       sha256 =
         "20e0b1627f613b32cc7f2d2e8dcc48a4a61938b24f3d14fb77cee694f0c9311a",
+      flags = { "integer-simple": False, },
     ),
   "text-binary":
     struct(
@@ -12883,6 +12900,7 @@ packages = (
       version = "0.1.1.4",
       sha256 =
         "f2d165557e2bbd014a4d6615b3e6c177adb034179a307a775e06836f91ebbe62",
+      flags = { "old-locale": False, },
     ),
   "time-locale-vietnamese":
     struct(

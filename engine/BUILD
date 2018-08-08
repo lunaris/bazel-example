@@ -4,29 +4,29 @@ load("@io_tweag_rules_haskell//haskell:haskell.bzl",
     "haskell_binary",
     "haskell_library",
     "haskell_toolchain",
-    )
+)
 
 load("@ai_formation_hazel//:hazel.bzl",
     "hazel_library",
-    )
+)
 
 load("@io_bazel_rules_docker//container:container.bzl",
     "container_image",
-    )
+)
 
 load("@io_tweag_clodl//clodl:clodl.bzl",
     "binary_closure",
-    )
+)
 
 load("@io_bazel_rules_docker//lang:image.bzl",
     "app_layer",
-    )
+)
 
 haskell_toolchain(
     name = "ghc",
     version = "8.2.2",
     tools = "@ghc//:bin",
-    )
+)
 
 haskell_binary(
     name = "test-bin",
@@ -34,16 +34,14 @@ haskell_binary(
     srcs = glob(['bin/test/test-bin/src/**/*.hs']),
     deps = [
         ":test-lib",
-        ],
-    prebuilt_dependencies = [
-        "base",
-        ],
+        hazel_library("base"),
+    ],
     compiler_flags = [
         "-dynamic",
         "-rdynamic",
         "-pie",
-        ],
-    )
+    ],
+)
 
 binary_closure(
     name = "test-closure",
@@ -55,14 +53,18 @@ binary_closure(
         "libdl\.so.*",
         "libm\.so.*",
         "libpthread\.so.*",
-        ],
-    )
+    ],
+)
 
 haskell_library(
     name = "test-lib",
     src_strip_prefix = "lib/test-lib/src",
     srcs = glob(['lib/test-lib/src/**/*.hs']),
     deps = [
+        hazel_library("base"),
+        hazel_library("bytestring"),
+        hazel_library("containers"),
+        hazel_library("transformers"),
         hazel_library("bifunctors"),
         hazel_library("constraints"),
         hazel_library("dlist"),
@@ -73,11 +75,8 @@ haskell_library(
         hazel_library("protolude"),
         hazel_library("tagged"),
         hazel_library("text"),
-        ],
-    prebuilt_dependencies = [
-        "base",
-        "bytestring",
-        "containers",
-        "transformers",
-        ],
-    )
+    ],
+    exports = {
+        hazel_library("containers"): "Data.Map.Strict",
+    }
+)
