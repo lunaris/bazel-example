@@ -40,6 +40,7 @@ haskell_binary(
         ],
     compiler_flags = [
         "-dynamic",
+        "-rdynamic",
         "-pie",
         ],
     )
