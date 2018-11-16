@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Tagged
@@ -5,6 +6,10 @@ module Tagged
 
   , unTaggedWith
   ) where
+
+#if MIN_VERSION_base(4,8,0)
+-- Something special
+#endif
 
 import Data.Tagged as CustomPrelude
   ( Tagged (..)

@@ -1,186 +1,61 @@
-workspace(name = "bazel_example")
+workspace(name = "habito")
 
-load("//bazel:repositories.bzl",
-    "github_http_archive",
+http_archive(
+  name = "io_tweag_rules_nixpkgs",
+  strip_prefix = "rules_nixpkgs-fd9adeb5be345108a10bad97994f45a6c4dc3b42",
+  urls = ["https://github.com/tweag/rules_nixpkgs/archive/fd9adeb5be345108a10bad97994f45a6c4dc3b42.tar.gz"],
 )
 
-# Rules for using Nix and nixpkgs packages to power external dependencies.
+load("@io_tweag_rules_nixpkgs//nixpkgs:nixpkgs.bzl", "nixpkgs_git_repository", "nixpkgs_package")
 
-github_http_archive(
-    name = "io_tweag_rules_nixpkgs",
-    user = "tweag",
-    project = "rules_nixpkgs",
-    sha = "1ec08ee8fbb64fcc05e3d4bde3d942afb083f34e",
+http_archive(
+  name = "io_bazel_rules_docker",
+  sha256 = "29d109605e0d6f9c892584f07275b8c9260803bf0c6fcb7de2623b2bedc910bd",
+  strip_prefix = "rules_docker-0.5.1",
+  urls = ["https://github.com/bazelbuild/rules_docker/archive/v0.5.1.tar.gz"],
 )
 
-load("@io_tweag_rules_nixpkgs//nixpkgs:nixpkgs.bzl",
-    "nixpkgs_git_repository",
-    "nixpkgs_package",
-)
-
-github_http_archive(
-    name = "io_tweag_clodl",
-    user = "tweag",
-    project = "clodl",
-    sha = "ed9be32ef539ea3645847987e11609028d6491f5",
-)
-
-# Rules for building Haskell code.
-
-github_http_archive(
-    name = "io_tweag_rules_haskell",
-    user = "tweag",
-    project = "rules_haskell",
-    sha = "2a28637b0e9376c6c532537cb46bcc618bc04138",
-)
-
-load("@io_tweag_rules_haskell//haskell:repositories.bzl",
-    "haskell_repositories",
-)
-
-haskell_repositories()
-
-github_http_archive(
-    name = "ai_formation_hazel",
-    user = "FormationAI",
-    project = "hazel",
-    sha = "120651a238f978ed3f92bc3ec848ebc4e5d77216",
-)
-
-# Rules for using Hackage packages as external dependencies.
-
-load("@ai_formation_hazel//:hazel.bzl",
-    "hazel_repositories",
-)
-
-github_http_archive(
-    name = "io_bazel_rules_docker",
-    user = "bazelbuild",
-    project = "rules_docker",
-    sha = "2042ceaa1afbcb5fc97376dd1a06196abe4c67c5",
-)
-
-load("@io_bazel_rules_docker//container:container.bzl",
-    "container_pull",
-    container_repositories = "repositories",
-)
-
+load("@io_bazel_rules_docker//container:container.bzl", "container_pull", container_repositories = "repositories")
 container_repositories()
 
 container_pull(
-    name = "alpine",
-    registry = "index.docker.io",
-    repository = "library/alpine",
-    tag = "3.8",
+  name = "debian",
+  registry = "index.docker.io",
+  repository = "library/debian",
+  tag = "stretch-slim",
 )
 
-# Toolchain and system dependencies, managed by Nix.
+http_archive(
+  name = "io_tweag_rules_haskell",
+  strip_prefix = "rules_haskell-7095cdb7ed1ded5f90191db7264880b75392f61f",
+  urls = ["https://github.com/tweag/rules_haskell/archive/7095cdb7ed1ded5f90191db7264880b75392f61f.tar.gz"],
+)
 
-# A pinned version of nixpkgs.
+load("@io_tweag_rules_haskell//haskell:repositories.bzl", "haskell_repositories")
 
 nixpkgs_git_repository(
-    name = "nixpkgs",
-    revision = "ee80654b5267b07ba10d62d143f211e0be81549e",
-)
-
-# Core toolchain for building and patching binaries so that their dynamic
-# dependencies relate to the Nix store.
-
-load("//bazel:cc.bzl", "cc_configure_custom")
-
-nixpkgs_package(
-    name = "patchelf",
-    repository = "@nixpkgs",
-    attribute_path = "patchelf",
-    build_file_content = """
-package(default_visibility= ["//visibility:public"])
-
-sh_binary(
-  name = "patchelf",
-  srcs = ["bin/patchelf"],
-)
-"""
+  name = "nixpkgs",
+  revision = "e7ca9af4cc7ad9c1c980ba4694cc9edaedcfda19",
 )
 
 nixpkgs_package(
-    name = "gcc-unwrapped",
-    repository = "@nixpkgs",
-    build_file_content = """
-package(default_visibility = ["//visibility:public"])
-
-filegroup(
-  name = "cc",
-  srcs = ["bin/gcc"],
-)
-"""
+  name = "ghc",
+  repositories = {"nixpkgs": "@nixpkgs//:default.nix"},
+  attribute_path = "haskell.compiler.ghc843",
 )
 
-nixpkgs_package(
-    name = "gcc-unwrapped.lib",
-    repository = "@nixpkgs",
-    build_file_content = """
-package(default_visibility = ["//visibility:public"])
+register_toolchains("//:ghc")
 
-load("@bazel_example//bazel:cc.bzl", "patched_solib")
-patched_solib(name="patched_stdcpp", lib_name="stdc++")
-"""
+load("@io_tweag_rules_haskell//haskell:nix.bzl", "haskell_nixpkgs_packageset", "haskell_nixpkgs_packages")
+
+haskell_nixpkgs_packageset(
+  name = "hackage_packages",
+  repositories = {"nixpkgs": "@nixpkgs//:default.nix"},
+  nix_file = "//:haskell-packages.nix",
+  base_attribute_path = "haskellPackages",
 )
 
-nixpkgs_package(
-    name = "gcc",
-    repository = "@nixpkgs",
-    attribute_path = "gcc",
-)
-
-nixpkgs_package(
-    name = "binutils",
-    repository = "@nixpkgs",
-    attribute_path = "binutils"
-)
-
-cc_configure_custom(
-    name = "local_config_cc",
-    gcc = "@gcc//:bin/gcc",
-    ld = "@binutils//:bin/ld",
-)
-
-# GHC and relevant toolchain, patched to build code that relates to the Nix
-# store only.
-
-nixpkgs_package(
-    name = "c2hs",
-    repository = "@nixpkgs",
-    attribute_path = "haskell.packages.ghc822.c2hs",
-)
-
-nixpkgs_package(
-    name = "ghc",
-    repository = "@nixpkgs",
-    attribute_path = "haskell.packages.ghc822.ghc",
-    build_file = "//bazel:BUILD.ghc",
-)
-
-register_toolchains("@ghc//:ghc")
-
-# External library dependencies.
-
-# Definitions of Hackage packages in the LTS snapshot we use.
-
-load("//bazel:packages-11.16.bzl",
-    "packages",
-    "core_packages",
-)
-
-hazel_repositories(
-    core_packages = core_packages,
-    packages = packages,
-    extra_libs = {
-        "stdc++": "@gcc-unwrapped.lib//:patched_stdcpp",
-        "c++": "@gcc-unwrapped.lib//:patched_stdcpp"
-    },
-)
-
-local_repository(
-    name = "ignore_stack_work",
-    path = "engine/.stack-work"
+load("@hackage_packages//:packages.bzl", "import_packages")
+import_packages(
+  name = "hackage",
 )
